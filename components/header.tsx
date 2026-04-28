@@ -1,6 +1,13 @@
-import { Search, Bell, User } from 'lucide-react'
+'use client'
+
+import { Search, Bell, User, LogOut } from 'lucide-react'
+import { useAuth } from '@/lib/auth-context'
+import { useState } from 'react'
 
 export function Header() {
+  const { logout, userEmail } = useAuth()
+  const [showDropdown, setShowDropdown] = useState(false)
+
   return (
     <header className="bg-card border-b border-border px-8 py-4 flex items-center justify-between">
       {/* Search */}
@@ -24,9 +31,31 @@ export function Header() {
           <span>👤</span>
           Manager
         </button>
-        <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-          <User className="w-5 h-5 text-foreground" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
+          >
+            <User className="w-5 h-5 text-foreground" />
+          </button>
+          {showDropdown && (
+            <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg py-1">
+              <div className="px-4 py-2 border-b border-border text-sm text-muted-foreground">
+                {userEmail || 'User'}
+              </div>
+              <button
+                onClick={() => {
+                  logout()
+                  setShowDropdown(false)
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-muted text-foreground flex items-center gap-2 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )

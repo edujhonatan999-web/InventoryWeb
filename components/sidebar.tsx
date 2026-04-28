@@ -1,6 +1,18 @@
+'use client'
+
 import { LayoutDashboard, Package, Boxes, TrendingUp, Users, Settings, HelpCircle, LogOut } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
 
 export function Sidebar() {
+  const pathname = usePathname()
+  const { logout } = useAuth()
+
+  const isActive = (path: string) => {
+    return pathname === path || pathname.startsWith(path + '/')
+  }
+
   return (
     <div className="w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border overflow-y-auto">
       {/* Logo */}
@@ -19,26 +31,26 @@ export function Sidebar() {
           Menu
         </div>
         <nav className="space-y-1">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-sidebar-primary text-sidebar-primary-foreground text-sm font-medium transition-colors">
+          <Link href="/dashboard" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/dashboard') && pathname === '/dashboard' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <LayoutDashboard className="w-5 h-5" />
             Dashboard
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors">
+          </Link>
+          <Link href="/dashboard/inventory" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive('/dashboard/inventory') ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <Boxes className="w-5 h-5" />
             Inventory
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors">
+          </Link>
+          <Link href="/dashboard/products" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive('/dashboard/products') ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <Package className="w-5 h-5" />
             Products
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors">
+          </Link>
+          <Link href="/dashboard/reports" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive('/dashboard/reports') ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <TrendingUp className="w-5 h-5" />
             Reports
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors">
+          </Link>
+          <Link href="/dashboard/suppliers" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive('/dashboard/suppliers') ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <Users className="w-5 h-5" />
             Suppliers
-          </a>
+          </Link>
         </nav>
       </div>
 
@@ -48,23 +60,23 @@ export function Sidebar() {
           Others
         </div>
         <nav className="space-y-1">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors">
+          <Link href="/dashboard/settings" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive('/dashboard/settings') ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <Settings className="w-5 h-5" />
             Settings
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors">
+          </Link>
+          <Link href="/dashboard/help" className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive('/dashboard/help') ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' : 'hover:bg-sidebar-accent text-sidebar-foreground'}`}>
             <HelpCircle className="w-5 h-5" />
             Help
-          </a>
+          </Link>
         </nav>
       </div>
 
       {/* Logout - Push to bottom */}
       <div className="p-4 border-t border-sidebar-border mt-auto">
-        <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors w-full">
+        <button onClick={logout} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground text-sm transition-colors w-full">
           <LogOut className="w-5 h-5" />
           Logout
-        </a>
+        </button>
       </div>
     </div>
   )
