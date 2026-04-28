@@ -1,6 +1,7 @@
 'use client'
 
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { useAuth } from '@/lib/auth-context'
 import { Sidebar } from '@/components/sidebar'
 import { Header } from '@/components/header'
 import { MetricCard } from '@/components/metric-card'
@@ -40,6 +41,19 @@ const stockByCategory = [
 const COLORS = ['#8b5cf6', '#6366f1', '#0ea5e9', '#f59e0b', '#ef4444']
 
 export default function Dashboard() {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar />
