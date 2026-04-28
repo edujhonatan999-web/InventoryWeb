@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false);
 
       // Redirect to login if not authenticated and not on public pages
-      if (!authenticated && !pathname?.startsWith('/login') && !pathname?.startsWith('/signup')) {
+      if (!authenticated && pathname !== '/' && !pathname?.startsWith('/login') && !pathname?.startsWith('/signup')) {
         router.push('/login');
       }
     };
