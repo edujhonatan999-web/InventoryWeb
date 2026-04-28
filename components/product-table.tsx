@@ -1,6 +1,37 @@
+/**
+ * COMPONENTE: ProductTable
+ * 
+ * PROPÓSITO:
+ * - Tabla que muestra los productos más valiosos del inventario
+ * - Muestra: Nombre, SKU, Categoría, Cantidad, Precio, Valor Total, Estado
+ * - Acciones: Ver, Editar, Eliminar (placeholders)
+ * 
+ * ⚠️ SEGURO PARA MODIFICAR: SÍ
+ * - ✅ Cambiar datos (reemplazar mock data con API)
+ * - ✅ Agregar/remover columnas
+ * - ✅ Implementar acciones
+ * - ✅ Agregar paginación
+ * 
+ * CONEXIONES:
+ * - Usado en: app/dashboard/page.tsx
+ * - Data: Mock data (líneas 4-55) → REEMPLAZAR con API
+ * 
+ * TODO FUTURO:
+ * - Conectar a API real
+ * - Agregar paginación
+ * - Implementar búsqueda/filtros
+ * - Hacer acciones (Edit, Delete) funcionales
+ * - Agregar loader mientras carga
+ * 
+ * NOTA:
+ * - Los datos están mockeados, edita el array "products" para cambiar
+ * - Los botones de acción no hacen nada (placeholders)
+ */
+
 import { Eye, Edit, Trash2 } from 'lucide-react'
 import { ChartCard } from './chart-card'
 
+// TODO: Reemplazar con datos de API real
 const products = [
   {
     id: 1,
@@ -93,12 +124,17 @@ export function ProductTable() {
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex items-center justify-center gap-2">
+                    {/* View Button */}
                     <button className="p-1.5 hover:bg-muted rounded transition-colors">
                       <Eye className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                     </button>
+                    
+                    {/* Edit Button */}
                     <button className="p-1.5 hover:bg-muted rounded transition-colors">
                       <Edit className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                     </button>
+                    
+                    {/* Delete Button */}
                     <button className="p-1.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors">
                       <Trash2 className="w-4 h-4 text-muted-foreground hover:text-red-600 dark:hover:text-red-400" />
                     </button>

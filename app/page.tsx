@@ -1,3 +1,29 @@
+/**
+ * PÁGINA: Redireccionador de Inicio (/)
+ * 
+ * PROPÓSITO:
+ * - Detecta estado de autenticación
+ * - Redirige a /dashboard si está autenticado
+ * - Redirige a /login si NO está autenticado
+ * - Muestra spinner mientras carga
+ * 
+ * ⚠️ SEGURO PARA MODIFICAR: SÍ
+ * - Cambiar destinos de redirección es seguro
+ * - Cambiar mensaje de loading es seguro
+ * - NO cambiar lógica de autenticación (está en AuthProvider)
+ * 
+ * CONEXIONES:
+ * - Lee de: useAuth() → lib/auth-context.tsx
+ * - Redirige a: /dashboard (usuarios autenticados)
+ * - Redirige a: /login (usuarios no autenticados)
+ * 
+ * FLUJO:
+ * 1. Cliente abre http://localhost:3000/
+ * 2. useAuth() lee de sessionStorage
+ * 3. Si isLoading = true → muestra spinner
+ * 4. Cuando carga → redirige según isAuthenticated
+ */
+
 'use client'
 
 import { useAuth } from '@/lib/auth-context'

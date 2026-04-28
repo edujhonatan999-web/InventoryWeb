@@ -1,3 +1,30 @@
+/**
+ * COMPONENTE: Header
+ * 
+ * PROPÓSITO:
+ * - Encabezado global del dashboard
+ * - Búsqueda de productos/proveedores
+ * - Notificaciones (placeholder)
+ * - Dropdown de usuario con logout
+ * 
+ * ⚠️ SEGURO PARA MODIFICAR: SÍ
+ * - ✅ Cambiar íconos, colores, layout
+ * - ✅ Agregar botones o campos
+ * - ✅ Implementar búsqueda funcional
+ * - ❌ NO remover logout (usuarios no podrían cerrar sesión)
+ * 
+ * CONEXIONES:
+ * - Usado en: app/dashboard/layout.tsx (aparece en todas las páginas del dashboard)
+ * - Lee de: useAuth() → userEmail, logout()
+ * - Styling: Variables CSS de globals.css
+ * 
+ * FUNCIONALIDADES:
+ * - Search: Placeholder (no funcional, requiere backend)
+ * - Bell: Notificaciones (placeholder)
+ * - Manager Badge: Muestra rol (hardcoded)
+ * - User Dropdown: Muestra email y logout
+ */
+
 'use client'
 
 import { Search, Bell, User, LogOut } from 'lucide-react'
@@ -24,13 +51,18 @@ export function Header() {
 
       {/* Right side actions */}
       <div className="flex items-center gap-4 ml-8">
+        {/* Notifications Button */}
         <button className="p-2 hover:bg-muted rounded-lg transition-colors">
           <Bell className="w-5 h-5 text-foreground" />
         </button>
+        
+        {/* Manager Badge */}
         <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium flex items-center gap-2">
           <span>👤</span>
           Manager
         </button>
+        
+        {/* User Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -40,9 +72,12 @@ export function Header() {
           </button>
           {showDropdown && (
             <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg py-1">
+              {/* User Email Display */}
               <div className="px-4 py-2 border-b border-border text-sm text-muted-foreground">
                 {userEmail || 'User'}
               </div>
+              
+              {/* Logout Button */}
               <button
                 onClick={() => {
                   logout()

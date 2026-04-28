@@ -1,3 +1,30 @@
+/**
+ * HOOK: useToast
+ * 
+ * PROPÓSITO:
+ * - Gestiona notificaciones toast en la aplicación
+ * - Almacena estado global de toasts (máximo 1 visible)
+ * - Proporciona funciones para crear, actualizar y cerrar toasts
+ * 
+ * SEGURO PARA MODIFICAR: SÍ (con cuidado)
+ * - Cambiar TOAST_LIMIT es seguro (controla cuántos toasts mostrar simultáneamente)
+ * - NO cambiar la estructura interna de reducer sin conocer las implicaciones
+ * 
+ * CONEXIONES:
+ * - Se conecta con: <Toaster /> en componentes UI
+ * - Usado en: cualquier componente que necesite mostrar notificaciones
+ * - Ejemplo: const { toast } = useToast(); toast({title: 'Éxito'})
+ * 
+ * FLUJO:
+ * 1. Hook lee estado global de toasts
+ * 2. Dispatch actualiza estado global y notifica listeners
+ * 3. Toasts se eliminan después de TOAST_REMOVE_DELAY (1000000ms = no auto-remove)
+ * 4. Se puede cerrar manualmente con toast.dismiss()
+ * 
+ * NOTA: Este es un sistema global, NO un Context de React.
+ * Usa listeners para notificar cambios a todos los componentes que usan el hook.
+ */
+
 'use client'
 
 // Inspired by react-hot-toast library
@@ -5,8 +32,8 @@ import * as React from 'react'
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast'
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 1  // Máximo 1 toast visible a la vez
+const TOAST_REMOVE_DELAY = 1000000  // No se auto-elimina
 
 type ToasterToast = ToastProps & {
   id: string
@@ -71,6 +98,13 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
+/**
+ * REDUCER: Gestiona transiciones de estado de toasts
+ * - ADD_TOAST: Agrega nuevo toast (respeta TOAST_LIMIT)
+ * - UPDATE_TOAST: Modifica props de un toast existente
+ * - DISMISS_TOAST: Marca toast como cerrado (dispara auto-remove)
+ * - REMOVE_TOAST: Elimina definitivamente de la lista
+ */
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_TOAST':
@@ -126,6 +160,7 @@ export const reducer = (state: State, action: Action): State => {
   }
 }
 
+// Sistema global: listeners notificados cuando estado cambia
 const listeners: Array<(state: State) => void> = []
 
 let memoryState: State = { toasts: [] }
@@ -139,6 +174,12 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, 'id'>
 
+/**
+ * FUNCIÓN: toast()
+ * - Crea y abre un nuevo toast
+ * - Retorna objeto con: id, dismiss(), update()
+ * - Usable fuera de componentes React
+ */
 function toast({ ...props }: Toast) {
   const id = genId()
 
@@ -168,6 +209,12 @@ function toast({ ...props }: Toast) {
   }
 }
 
+/**
+ * HOOK: useToast()
+ * - Suscribe componente a cambios de estado global
+ * - Retorna estado y funciones para manipular toasts
+ * - Se desuscribe automáticamente al desmontar
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
 

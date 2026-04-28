@@ -1,3 +1,40 @@
+/**
+ * PÁGINA: Login (/login)
+ * 
+ * PROPÓSITO:
+ * - Formulario de autenticación
+ * - Valida email y contraseña
+ * - Guarda credenciales en sessionStorage
+ * - Redirige a dashboard después de login exitoso
+ * 
+ * ⚠️ SEGURO PARA MODIFICAR: SÍ (con notas)
+ * - ✅ Cambiar estilos/diseño del formulario
+ * - ✅ Agregar campos de validación
+ * - ⚠️ Validación de credenciales es mock (no conectada a backend)
+ * - ❌ NO cambiar dónde se guardan credenciales sin entender seguridad
+ * 
+ * CONEXIONES:
+ * - Lee de: sessionStorage (login)
+ * - Escribe a: sessionStorage → isAuthenticated, userEmail
+ * - Redirige a: / (raíz) → luego va a /dashboard
+ * - Usado por: useAuth() en contexto
+ * 
+ * VALIDACIÓN ACTUAL:
+ * 1. Email debe tener formato válido (@, .)
+ * 2. Contraseña mínimo 6 caracteres
+ * 3. Ambos campos obligatorios
+ * 4. NO valida contra backend (es mock)
+ * 
+ * CREDENCIALES DEMO:
+ * - Email: admin@inventory.com
+ * - Contraseña: password123 (cualquier contraseña de 6+ caracteres sirve)
+ * 
+ * TODO FUTURO:
+ * - Conectar a API real de autenticación
+ * - Usar JWT tokens en lugar de sessionStorage
+ * - Implementar "Remember me" con cookies seguras
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -20,7 +57,7 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    // Validation
+    // Validación
     if (!email || !password) {
       setError('Please fill in all fields');
       setIsLoading(false);
@@ -39,12 +76,12 @@ export default function LoginPage() {
       return;
     }
 
-    // Simulate API call
+    // Simula llamada a API (en producción: fetch a endpoint real)
     setTimeout(() => {
-      // Store auth state in sessionStorage
+      // Guarda datos en sessionStorage (AuthProvider los leerá)
       sessionStorage.setItem('isAuthenticated', 'true');
       sessionStorage.setItem('userEmail', email);
-      router.push('/');
+      router.push('/');  // Redirige a / → AuthProvider redirige a /dashboard
       setIsLoading(false);
     }, 1000);
   };
