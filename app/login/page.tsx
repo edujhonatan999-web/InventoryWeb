@@ -10,7 +10,6 @@
  * ⚠️ SEGURO PARA MODIFICAR: SÍ (con notas)
  * - ✅ Cambiar estilos/diseño del formulario
  * - ✅ Agregar campos de validación
- * - ⚠️ Validación de credenciales es mock (no conectada a backend)
  * - ❌ NO cambiar dónde se guardan credenciales sin entender seguridad
  * 
  * CONEXIONES:
@@ -47,7 +46,7 @@ import { AlertCircle, Boxes } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -58,51 +57,78 @@ export default function LoginPage() {
     setIsLoading(true);
 
     // Validación
-    if (!email || !password) {
-      setError('Please fill in all fields');
+    if (!username || !password) {
+      setError('Por favor, completa todos los campos');
       setIsLoading(false);
       return;
     }
 
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Please enter a valid email address');
+    if (username.trim().length < 3) {
+      setError('El nombre de usuario debe tener al menos 3 caracteres');
       setIsLoading(false);
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.trim().length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres');
       setIsLoading(false);
       return;
     }
 
-    // Simula llamada a API (en producción: fetch a endpoint real)
-    setTimeout(() => {
-      // Guarda datos en sessionStorage (AuthProvider los leerá)
+    try {
+      const response = await fetch('http://localhost:4000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        setError('Nombre de usuario o contraseña incorrectos');
+        setIsLoading(false);
+        return;
+      }
+
+      const data = (await response.json());
+      const token = data.access_token;
+      if (!token) {
+        setError('Error: ntr');
+        setIsLoading(false);
+        return;
+      }
+
+      const secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = `authToken=${encodeURIComponent(data.token)}; Path=/; SameSite=Strict${secureFlag}`;
+
       sessionStorage.setItem('isAuthenticated', 'true');
-      sessionStorage.setItem('userEmail', email);
-      router.push('/');  // Redirige a / → AuthProvider redirige a /dashboard
+      sessionStorage.setItem('userEmail', username.trim());
+      router.push('/');
+    } catch (err) {
+      setError('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 flex items-center justify-center p-4">
+    <div className="login-bg min-h-screen bg-gradient-to-br from-background via-background to-secondary/30 flex items-center justify-center p-4 ">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center gap-2 bg-primary rounded-lg p-2">
             <Boxes className="w-6 h-6 text-primary-foreground" />
-            <span className="font-bold text-primary-foreground">InventoryHub</span>
+            <span className="font-bold text-primary-foreground">Inventory.IES</span>
           </div>
         </div>
 
         {/* Card */}
         <div className="bg-card border border-border rounded-lg shadow-lg p-8">
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h1>
+            <h1 className="text-2xl font-bold text-foreground mb-2">Bienvenido</h1>
             <p className="text-muted-foreground text-sm">
-              Sign in to manage your inventory
+              Ingresese sus credenciales para acceder a su panel de control de inventario.
             </p>
           </div>
 
@@ -116,17 +142,17 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
+            {/* Username */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground font-medium">
-                Email Address
+              <Label htmlFor="username" className="text-foreground font-medium">
+                Username
               </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="admin@inventoryhub.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                placeholder="ejemplo123"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="bg-input border-border text-foreground placeholder:text-muted-foreground"
               />
             </div>
@@ -135,14 +161,9 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="text-foreground font-medium">
-                  Password
+                  Contraseña
                 </Label>
-                <Link
-                  href="/forgot-password"
-                  className="text-xs text-primary hover:text-primary/90 transition-colors"
-                >
-                  Forgot password?
-                </Link>
+               
               </div>
               <Input
                 id="password"
@@ -178,11 +199,11 @@ export default function LoginPage() {
 
           {/* Demo Credentials */}
           <div className="mt-6 pt-6 border-t border-border">
-            <p className="text-xs text-muted-foreground mb-3">Demo Credentials:</p>
-            <div className="space-y-1 text-xs text-muted-foreground">
-              <p>Email: <code className="bg-secondary/50 px-2 py-1 rounded">admin@inventory.com</code></p>
-              <p>Password: <code className="bg-secondary/50 px-2 py-1 rounded">password123</code></p>
-            </div>
+            <p className="text-xs text-muted-foreground mb-3">Nota:</p>
+            <p className="text-xs text-muted-foreground">
+              Si tu backend puede emitir cookies HttpOnly con <code className="bg-secondary/50 px-2 py-1 rounded">Set-Cookie</code>,
+              es mas seguro que guardarlas desde el frontend.
+            </p>
           </div>
         </div>
 

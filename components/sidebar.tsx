@@ -61,9 +61,9 @@ export function Sidebar() {
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-sidebar-primary flex items-center justify-center">
-            <Package className="w-6 h-6 text-sidebar-primary-foreground" />
+            <img src="/logo-sidebar.png" alt="Logo" />
           </div>
-          <div className="font-bold text-lg text-sidebar-foreground">INVENTO</div>
+          <div className="font-bold text-lg text-sidebar-foreground">Inventory.IES</div>
         </div>
       </div>
 

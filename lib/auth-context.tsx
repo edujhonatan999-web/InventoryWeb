@@ -65,15 +65,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   useEffect(() => {
     const checkAuth = () => {
+      const cookieToken = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('authToken='))
+        ?.split('=')[1];
+
       const authenticated = sessionStorage.getItem('isAuthenticated') === 'true';
       const email = sessionStorage.getItem('userEmail');
 
-      setIsAuthenticated(authenticated);
+      const hasToken = Boolean(cookieToken);
+      setIsAuthenticated(authenticated || hasToken);
       setUserEmail(email || null);
       setIsLoading(false);
 
       // Redirigir si no está autenticado y está en ruta protegida
-      if (!authenticated && pathname !== '/' && !pathname?.startsWith('/login') && !pathname?.startsWith('/signup')) {
+      if (!authenticated && !hasToken && pathname !== '/' && !pathname?.startsWith('/login') && !pathname?.startsWith('/signup')) {
         router.push('/login');
       }
     };
@@ -88,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * - Se usa en Header y Sidebar
    */
   const logout = () => {
+    document.cookie = 'authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict';
     sessionStorage.removeItem('isAuthenticated');
     sessionStorage.removeItem('userEmail');
     setIsAuthenticated(false);

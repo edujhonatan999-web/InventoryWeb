@@ -123,3 +123,8 @@
     @apply bg-background text-foreground;
   }
 }
+.login-bg{
+  background-image: url('/bg-image/bg-img-login.webp');
+  background-size: cover;
+  background-position: center;
+}
