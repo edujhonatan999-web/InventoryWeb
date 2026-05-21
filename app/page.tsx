@@ -18,7 +18,7 @@
  * - Redirige a: /login (usuarios no autenticados)
  * 
  * FLUJO:
- * 1. Cliente abre http://localhost:3000/
+ * 1. Cliente abre http://:3000/
  * 2. useAuth() lee de sessionStorage
  * 3. Si isLoading = true → muestra spinner
  * 4. Cuando carga → redirige según isAuthenticated

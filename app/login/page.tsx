@@ -43,7 +43,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, Boxes } from 'lucide-react';
-
+const API_URL = process.env.BACKEND_URL 
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');
@@ -76,7 +76,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -100,7 +100,7 @@ export default function LoginPage() {
       }
 
       const secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
-      document.cookie = `authToken=${encodeURIComponent(data.token)}; Path=/; SameSite=Strict${secureFlag}`;
+      document.cookie = `authToken=${encodeURIComponent(token)}; Path=/; SameSite=Strict${secureFlag}`;
 
       sessionStorage.setItem('isAuthenticated', 'true');
       sessionStorage.setItem('userEmail', username.trim());
@@ -197,12 +197,10 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Demo Credentials */}
           <div className="mt-6 pt-6 border-t border-border">
             <p className="text-xs text-muted-foreground mb-3">Nota:</p>
             <p className="text-xs text-muted-foreground">
-              Si tu backend puede emitir cookies HttpOnly con <code className="bg-secondary/50 px-2 py-1 rounded">Set-Cookie</code>,
-              es mas seguro que guardarlas desde el frontend.
+           Este software se creo para ser usado por el personal de TI de la insitucion educativa, por lo que necesitas tener una cuenta para poder ingresar. Si no tienes una cuenta, por favor contacta al administrador del sistema para obtener acceso.
             </p>
           </div>
         </div>

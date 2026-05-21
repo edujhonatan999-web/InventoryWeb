@@ -36,7 +36,7 @@
 
 'use client'
 
-import { LayoutDashboard, Package, Boxes, TrendingUp, Users, Settings, HelpCircle, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, ArrowUpDown, BarChart3, Users, Tags, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
@@ -88,15 +88,15 @@ export function Sidebar() {
 
           {/* Inventory */}
           <Link 
-            href="/dashboard/inventory" 
+            href="/dashboard/movements" 
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/inventory') 
+              isActive('/dashboard/movements') 
                 ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
                 : 'hover:bg-sidebar-accent text-sidebar-foreground'
             }`}
           >
-            <Boxes className="w-5 h-5" />
-            Inventory
+            <ArrowUpDown className="w-5 h-5" />
+            Movimientos
           </Link>
 
           {/* Products */}
@@ -109,7 +109,7 @@ export function Sidebar() {
             }`}
           >
             <Package className="w-5 h-5" />
-            Products
+            Productos
           </Link>
 
           {/* Reports */}
@@ -121,21 +121,21 @@ export function Sidebar() {
                 : 'hover:bg-sidebar-accent text-sidebar-foreground'
             }`}
           >
-            <TrendingUp className="w-5 h-5" />
-            Reports
+            <BarChart3 className="w-5 h-5" />
+            Reportes
           </Link>
 
           {/* Suppliers */}
           <Link 
-            href="/dashboard/suppliers" 
+            href="/dashboard/users" 
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/suppliers') 
+              isActive('/dashboard/users') 
                 ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
                 : 'hover:bg-sidebar-accent text-sidebar-foreground'
             }`}
           >
             <Users className="w-5 h-5" />
-            Suppliers
+            Usuarios
           </Link>
         </nav>
       </div>
@@ -148,29 +148,19 @@ export function Sidebar() {
         <nav className="space-y-1">
           {/* Settings */}
           <Link 
-            href="/dashboard/settings" 
+            href="/dashboard/categories" 
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/settings') 
+              isActive('/dashboard/categories') 
                 ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
                 : 'hover:bg-sidebar-accent text-sidebar-foreground'
             }`}
           >
-            <Settings className="w-5 h-5" />
-            Settings
+            <Tags className="w-5 h-5" />
+            Categorías
           </Link>
 
           {/* Help */}
-          <Link 
-            href="/dashboard/help" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/help') 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <HelpCircle className="w-5 h-5" />
-            Help
-          </Link>
+      
         </nav>
       </div>
 

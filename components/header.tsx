@@ -27,7 +27,7 @@
 
 'use client'
 
-import { Search, Bell, User, LogOut } from 'lucide-react'
+import { Search, User, LogOut } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { useState } from 'react'
 
@@ -51,15 +51,10 @@ export function Header() {
 
       {/* Right side actions */}
       <div className="flex items-center gap-4 ml-8">
-        {/* Notifications Button */}
-        <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-          <Bell className="w-5 h-5 text-foreground" />
-        </button>
-        
-        {/* Manager Badge */}
+        {/* User Badge */}
         <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium flex items-center gap-2">
           <span>👤</span>
-          Manager
+          {userEmail || 'Usuario'}
         </button>
         
         {/* User Dropdown */}
