@@ -43,7 +43,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, Boxes } from 'lucide-react';
-const API_URL = process.env.BACKEND_URL 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');
