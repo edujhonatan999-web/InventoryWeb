@@ -20,8 +20,8 @@ interface User {
 	updated_at: string
 }
 const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
-const ROLES_ENDPOINT = `${API_URL}/roles`
-const USERS_ENDPOINT = `${API_URL}/users`
+const ROLES_ENDPOINT = `${API_URL}/rol`
+const USERS_ENDPOINT = `${API_URL}/useR`
 
 const getAuthToken = () => {
 	const tokenPair = document.cookie

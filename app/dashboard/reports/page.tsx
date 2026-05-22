@@ -34,7 +34,7 @@ interface User {
 }
 const API_URL= process.env.BACKEND_URL
 const TICKETS_ENDPOINT = `${API_URL}/tickets`
-const USERS_ENDPOINT = `${API_URL}/users`
+const USERS_ENDPOINT = `${API_URL}/user`
 const STATUS_OPTIONS = ['pending', 'in_progress', 'resolved'] as const
 
 const toArray = (payload: Ticket[] | Ticket | null | undefined) =>
