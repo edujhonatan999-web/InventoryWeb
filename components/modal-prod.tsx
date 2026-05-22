@@ -48,8 +48,8 @@ interface ModalProdProps {
 	trigger?: ReactNode
 	onProductSaved: (product: Product, mode: ModalMode) => void
 }
-
-const PRODUCTS_ENDPOINT = 'http://localhost:4000/products'
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+const PRODUCTS_ENDPOINT = `${API_URL}/products`
 
 export default function ModalProd({
 	categories,

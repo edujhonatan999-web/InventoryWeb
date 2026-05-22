@@ -63,10 +63,10 @@ interface ModalMovProps {
   movement?: ApiMovementItem
   onMovementSaved: (movement: ApiMovementItem, mode: ModalMode) => void
 }
-
-const MOVEMENTS_ENDPOINT = 'http://localhost:4000/movements'
-const PRODUCTS_ENDPOINT = 'http://localhost:4000/products'
-const DEPARTMENTS_ENDPOINT = 'http://localhost:4000/departments'
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+const MOVEMENTS_ENDPOINT = `${API_URL}/movements`
+const PRODUCTS_ENDPOINT = `${API_URL}/products`
+const DEPARTMENTS_ENDPOINT = `${API_URL}/departments`
 
 const toDateTimeLocal = (date: Date) => {
   const pad = (value: number) => value.toString().padStart(2, '0')
