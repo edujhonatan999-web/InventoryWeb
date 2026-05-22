@@ -11,7 +11,7 @@ interface Category {
 	created_at?: string
 	updated_at?: string
 }
-const API_URL= process.env.BACKEND_URL
+const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 const CATEGORIES_ENDPOINT = `${API_URL}/categories`
 
 export default function CategoriesPage() {

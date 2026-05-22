@@ -19,7 +19,7 @@ interface User {
 	created_at: string
 	updated_at: string
 }
-const API_URL= process.env.BACKEND_URL
+const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 const ROLES_ENDPOINT = `${API_URL}/roles`
 const USERS_ENDPOINT = `${API_URL}/users`
 

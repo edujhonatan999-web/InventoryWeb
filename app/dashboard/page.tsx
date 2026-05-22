@@ -38,7 +38,7 @@ interface Ticket {
   created_at: string
   updated_at: string
 }
-const API_URL= process.env.BACKEND_URL
+const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 const TICKETS_ENDPOINT = `${API_URL}/tickets`
 const CATEGORIES_ENDPOINT = `${API_URL}/categories`
 const PRODUCTS_ENDPOINT = `${API_URL}/products`

@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-
-const TICKETS_ENDPOINT = 'http://localhost:4000/tickets'
-const PRODUCTS_ENDPOINT = 'http://localhost:4000/products'
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+const TICKETS_ENDPOINT = `${API_URL}/tickets`
+const PRODUCTS_ENDPOINT = `${API_URL}/products`
 
 type ProductOption = {
 	id: number

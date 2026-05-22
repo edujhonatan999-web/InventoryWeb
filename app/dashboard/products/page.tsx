@@ -22,7 +22,7 @@ interface Product {
   updated_at: string
   category: ProductCategory | null
 }
-const API_URL= process.env.BACKEND_URL
+const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 const PRODUCTS_ENDPOINT = `${API_URL}/products`
 const CATEGORIES_ENDPOINT = `${API_URL}/categories`
 

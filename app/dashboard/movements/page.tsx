@@ -69,7 +69,7 @@ const toApiMovement = (item: MovementItem): ApiMovementItem => ({
     name: item.departmentName,
   },
 })
-const API_URL= process.env.BACKEND_URL
+const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 export default function InventoryPage() {
   const [movementData, setMovementData] = useState<MovementItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
