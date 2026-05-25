@@ -71,6 +71,36 @@ const normalizeRole = (value: string | null) => {
   return null;
 };
 
+const decodeJwtPayload = (token: string) => {
+  const parts = token.split('.');
+  if (parts.length < 2) {
+    return null;
+  }
+
+  try {
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
+    const json = atob(padded);
+    return JSON.parse(json) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+};
+
+const getRoleFromToken = (token: string | null) => {
+  if (!token) {
+    return null;
+  }
+
+  const payload = decodeJwtPayload(token);
+  if (!payload) {
+    return null;
+  }
+
+  const rawRole = String(payload.role_name ?? payload.role ?? '').toLowerCase();
+  return normalizeRole(rawRole) ?? null;
+};
+
 export const isPathAllowed = (role: UserRole, path: string) => {
   if (ROLE_ACCESS[role].allowedPaths.includes('*')) {
     return true;
@@ -107,10 +137,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authenticated = sessionStorage.getItem('isAuthenticated') === 'true';
       const email = sessionStorage.getItem('userEmail');
       const storedRole = normalizeRole(sessionStorage.getItem('userRole'));
+      const tokenRole = getRoleFromToken(cookieToken ? decodeURIComponent(cookieToken) : null);
 
       const hasToken = Boolean(cookieToken);
       const hasAccess = authenticated || hasToken;
-      const resolvedRole = hasAccess ? storedRole ?? 'user' : null;
+      const resolvedRole = hasAccess ? storedRole ?? tokenRole ?? 'user' : null;
 
       setIsAuthenticated(hasAccess);
       setUserEmail(email || null);
