@@ -32,6 +32,8 @@
 
 'use client'
 
+import { useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { Sidebar } from '@/components/sidebar'
 import { Header } from '@/components/header'
@@ -41,7 +43,19 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { isLoading } = useAuth();
+  const { isLoading, isAuthenticated, canAccessPath } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading || !isAuthenticated) {
+      return;
+    }
+
+    if (!canAccessPath(pathname)) {
+      router.push('/dashboard');
+    }
+  }, [isLoading, isAuthenticated, canAccessPath, pathname, router]);
 
   // Spinner mientras se verifica autenticación
   if (isLoading) {

@@ -5,6 +5,7 @@ import { Search } from 'lucide-react'
 import ButtonExport from '@/components/button-export'
 import { Button } from '@/components/ui/button'
 import ButtonDelete from '@/components/button-delete'
+import { useAuth } from '@/lib/auth-context'
 import {
 	Dialog,
 	DialogContent,
@@ -41,6 +42,7 @@ const toArray = (payload: Ticket[] | Ticket | null | undefined) =>
 	Array.isArray(payload) ? payload : payload ? [payload] : []
 
 export default function ReportsPage() {
+	const { canDelete } = useAuth()
 	const [tickets, setTickets] = useState<Ticket[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [loadError, setLoadError] = useState<string | null>(null)
@@ -459,11 +461,13 @@ export default function ReportsPage() {
 													<Button variant="outline" size="sm" onClick={() => openEditModal(ticket)}>
 														Editar
 													</Button>
-													<ButtonDelete
-														title="Eliminar ticket"
-														description="Esta seguro de eliminar el ticket? Esta accion no se puede deshacer."
-														onConfirm={() => handleDeleteTicket(ticket.id)}
-													/>
+													{canDelete && (
+														<ButtonDelete
+															title="Eliminar ticket"
+															description="Esta seguro de eliminar el ticket? Esta accion no se puede deshacer."
+															onConfirm={() => handleDeleteTicket(ticket.id)}
+														/>
+													)}
 												</div>
 											</td>
 										</tr>

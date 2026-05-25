@@ -44,15 +44,49 @@ import { useRouter, usePathname } from 'next/navigation';
 interface AuthContextType {
   isAuthenticated: boolean;
   userEmail: string | null;
+  userRole: UserRole | null;
   logout: () => void;
   isLoading: boolean;  // ← Crítico para evitar hydration mismatch
+  canAccessPath: (path: string) => boolean;
+  canDelete: boolean;
 }
+
+export type UserRole = 'admin' | 'user';
+
+const ROLE_ACCESS = {
+  admin: {
+    allowedPaths: ['*'],
+    canDelete: true,
+  },
+  user: {
+    allowedPaths: ['/dashboard', '/dashboard/movements', '/dashboard/products', '/dashboard/reports'],
+    canDelete: false,
+  },
+} satisfies Record<UserRole, { allowedPaths: string[]; canDelete: boolean }>;
+
+const normalizeRole = (value: string | null) => {
+  if (value === 'admin' || value === 'user') {
+    return value;
+  }
+  return null;
+};
+
+export const isPathAllowed = (role: UserRole, path: string) => {
+  if (ROLE_ACCESS[role].allowedPaths.includes('*')) {
+    return true;
+  }
+
+  return ROLE_ACCESS[role].allowedPaths.some((basePath) =>
+    path === basePath || path.startsWith(`${basePath}/`)
+  );
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -72,10 +106,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const authenticated = sessionStorage.getItem('isAuthenticated') === 'true';
       const email = sessionStorage.getItem('userEmail');
+      const storedRole = normalizeRole(sessionStorage.getItem('userRole'));
 
       const hasToken = Boolean(cookieToken);
-      setIsAuthenticated(authenticated || hasToken);
+      const hasAccess = authenticated || hasToken;
+      const resolvedRole = hasAccess ? storedRole ?? 'user' : null;
+
+      setIsAuthenticated(hasAccess);
       setUserEmail(email || null);
+      setUserRole(resolvedRole);
       setIsLoading(false);
 
       // Redirigir si no está autenticado y está en ruta protegida
@@ -97,13 +136,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     document.cookie = 'authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict';
     sessionStorage.removeItem('isAuthenticated');
     sessionStorage.removeItem('userEmail');
+    sessionStorage.removeItem('userRole');
     setIsAuthenticated(false);
     setUserEmail(null);
+    setUserRole(null);
     router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userEmail, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        userEmail,
+        userRole,
+        logout,
+        isLoading,
+        canAccessPath: (path) => (userRole ? isPathAllowed(userRole, path) : false),
+        canDelete: userRole ? ROLE_ACCESS[userRole].canDelete : false,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

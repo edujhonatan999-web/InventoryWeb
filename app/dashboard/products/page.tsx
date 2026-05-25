@@ -6,6 +6,7 @@ import { Search, Edit2, Eye } from 'lucide-react'
 import ButtonDelete from '@/components/button-delete'
 import ButtonExport from '@/components/button-export'
 import ModalProd from '@/components/modal-prod'
+import { useAuth } from '@/lib/auth-context'
 
 interface ProductCategory {
   id: number
@@ -28,6 +29,7 @@ const CATEGORIES_ENDPOINT = `${API_URL}/categories`
 
 
 export default function ProductsPage() {
+  const { canDelete } = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState<string>('all')
   const [productsData, setProductsData] = useState<Product[]>([])
@@ -285,11 +287,13 @@ export default function ProductsPage() {
                           </button>
                         }
                       />
-                      <ButtonDelete
-                        title="Eliminar producto"
-                        description="Esta seguro de eliminar el producto? Esta accion no se puede deshacer."
-                        onConfirm={() => handleDeleteProduct(product)}
-                      />
+                      {canDelete && (
+                        <ButtonDelete
+                          title="Eliminar producto"
+                          description="Esta seguro de eliminar el producto? Esta accion no se puede deshacer."
+                          onConfirm={() => handleDeleteProduct(product)}
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>

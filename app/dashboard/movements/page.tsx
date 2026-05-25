@@ -5,6 +5,7 @@ import { Search, Plus } from 'lucide-react'
 import ModalMov from '@/components/modal-mov'
 import ButtonDelete from '@/components/button-delete'
 import ButtonExport from '@/components/button-export'
+import { useAuth } from '@/lib/auth-context'
 
 interface MovementItem {
   id: number
@@ -71,6 +72,7 @@ const toApiMovement = (item: MovementItem): ApiMovementItem => ({
 })
 const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 export default function InventoryPage() {
+  const { canDelete } = useAuth()
   const [movementData, setMovementData] = useState<MovementItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -331,14 +333,16 @@ export default function InventoryPage() {
                               </button>
                             }
                           />
-                          <ButtonDelete
-                            onConfirm={() => handleDeleteMovement(item.id)}
-                            trigger={
-                              <button className="px-2 py-1 text-destructive hover:bg-destructive/10 rounded transition-colors text-xs font-medium">
-                                Delete
-                              </button>
-                            }
-                          />
+                          {canDelete && (
+                            <ButtonDelete
+                              onConfirm={() => handleDeleteMovement(item.id)}
+                              trigger={
+                                <button className="px-2 py-1 text-destructive hover:bg-destructive/10 rounded transition-colors text-xs font-medium">
+                                  Delete
+                                </button>
+                              }
+                            />
+                          )}
                         </div>
                       </td>
                     </tr>

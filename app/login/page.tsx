@@ -99,11 +99,17 @@ export default function LoginPage() {
         return;
       }
 
+      const rawRole = String(
+        data.role ?? data.user?.role ?? data.user?.rol ?? data.user?.role_name ?? ''
+      ).toLowerCase();
+      const resolvedRole = rawRole === 'admin' ? 'admin' : 'user';
+
       const secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
       document.cookie = `authToken=${encodeURIComponent(token)}; Path=/; SameSite=Strict${secureFlag}`;
 
       sessionStorage.setItem('isAuthenticated', 'true');
       sessionStorage.setItem('userEmail', username.trim());
+      sessionStorage.setItem('userRole', resolvedRole);
       router.push('/');
     } catch (err) {
       setError('Ha ocurrido un error. Por favor, inténtalo de nuevo.');

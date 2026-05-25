@@ -43,7 +43,7 @@ import { useAuth } from '@/lib/auth-context'
 
 export function Sidebar() {
   const pathname = usePathname()
-  const { logout } = useAuth()
+  const { logout, canAccessPath } = useAuth()
 
   /**
    * FUNCIÓN: isActive
@@ -54,6 +54,46 @@ export function Sidebar() {
   const isActive = (path: string) => {
     return pathname === path || pathname.startsWith(path + '/')
   }
+
+  const mainLinks = [
+    {
+      href: '/dashboard',
+      label: 'Dashboard',
+      icon: LayoutDashboard,
+      matchExact: true,
+    },
+    {
+      href: '/dashboard/movements',
+      label: 'Movimientos',
+      icon: ArrowUpDown,
+    },
+    {
+      href: '/dashboard/products',
+      label: 'Productos',
+      icon: Package,
+    },
+    {
+      href: '/dashboard/reports',
+      label: 'Reportes',
+      icon: BarChart3,
+    },
+    {
+      href: '/dashboard/users',
+      label: 'Usuarios',
+      icon: Users,
+    },
+  ]
+
+  const secondaryLinks = [
+    {
+      href: '/dashboard/categories',
+      label: 'Categorías',
+      icon: Tags,
+    },
+  ]
+
+  const filteredMainLinks = mainLinks.filter((link) => canAccessPath(link.href))
+  const filteredSecondaryLinks = secondaryLinks.filter((link) => canAccessPath(link.href))
 
   return (
     <div className="w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border overflow-y-auto">
@@ -73,96 +113,59 @@ export function Sidebar() {
           Menu
         </div>
         <nav className="space-y-1">
-          {/* Dashboard */}
-          <Link 
-            href="/dashboard" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              isActive('/dashboard') && pathname === '/dashboard' 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <LayoutDashboard className="w-5 h-5" />
-            Dashboard
-          </Link>
+          {filteredMainLinks.map((link) => {
+            const Icon = link.icon
+            const isLinkActive = link.matchExact
+              ? isActive(link.href) && pathname === link.href
+              : isActive(link.href)
 
-          {/* Inventory */}
-          <Link 
-            href="/dashboard/movements" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/movements') 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <ArrowUpDown className="w-5 h-5" />
-            Movimientos
-          </Link>
-
-          {/* Products */}
-          <Link 
-            href="/dashboard/products" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/products') 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <Package className="w-5 h-5" />
-            Productos
-          </Link>
-
-          {/* Reports */}
-          <Link 
-            href="/dashboard/reports" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/reports') 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <BarChart3 className="w-5 h-5" />
-            Reportes
-          </Link>
-
-          {/* Suppliers */}
-          <Link 
-            href="/dashboard/users" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/users') 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <Users className="w-5 h-5" />
-            Usuarios
-          </Link>
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                  isLinkActive
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium'
+                    : 'hover:bg-sidebar-accent text-sidebar-foreground'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                {link.label}
+              </Link>
+            )
+          })}
         </nav>
       </div>
 
       {/* Secondary Menu */}
-      <div className="p-4 space-y-2">
-        <div className="text-xs font-semibold text-sidebar-accent px-2 py-2 uppercase tracking-wider">
-          Others
-        </div>
-        <nav className="space-y-1">
-          {/* Settings */}
-          <Link 
-            href="/dashboard/categories" 
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-              isActive('/dashboard/categories') 
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium' 
-                : 'hover:bg-sidebar-accent text-sidebar-foreground'
-            }`}
-          >
-            <Tags className="w-5 h-5" />
-            Categorías
-          </Link>
+      {filteredSecondaryLinks.length > 0 && (
+        <div className="p-4 space-y-2">
+          <div className="text-xs font-semibold text-sidebar-accent px-2 py-2 uppercase tracking-wider">
+            Others
+          </div>
+          <nav className="space-y-1">
+            {filteredSecondaryLinks.map((link) => {
+              const Icon = link.icon
+              const isLinkActive = isActive(link.href)
 
-          {/* Help */}
-      
-        </nav>
-      </div>
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                    isLinkActive
+                      ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium'
+                      : 'hover:bg-sidebar-accent text-sidebar-foreground'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  {link.label}
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
+      )}
 
       {/* Logout - Fijado al fondo */}
       <div className="p-4 border-t border-sidebar-border mt-auto">
