@@ -55,14 +55,21 @@ export type UserRole = 'admin' | 'user';
 
 const ROLE_ACCESS = {
   admin: {
-    allowedPaths: ['*'],
+    allowAll: true,
+    exactPaths: [] as string[],
+    prefixPaths: [] as string[],
     canDelete: true,
   },
   user: {
-    allowedPaths: ['/dashboard', '/dashboard/movements', '/dashboard/products', '/dashboard/reports'],
+    allowAll: false,
+    exactPaths: ['/dashboard'],
+    prefixPaths: ['/dashboard/movements', '/dashboard/products', '/dashboard/reports'],
     canDelete: false,
   },
-} satisfies Record<UserRole, { allowedPaths: string[]; canDelete: boolean }>;
+} satisfies Record<
+  UserRole,
+  { allowAll: boolean; exactPaths: string[]; prefixPaths: string[]; canDelete: boolean }
+>;
 
 const normalizeRole = (value: string | null) => {
   if (value === 'admin' || value === 'user') {
@@ -102,11 +109,15 @@ const getRoleFromToken = (token: string | null) => {
 };
 
 export const isPathAllowed = (role: UserRole, path: string) => {
-  if (ROLE_ACCESS[role].allowedPaths.includes('*')) {
+  if (ROLE_ACCESS[role].allowAll) {
     return true;
   }
 
-  return ROLE_ACCESS[role].allowedPaths.some((basePath) =>
+  if (ROLE_ACCESS[role].exactPaths.includes(path)) {
+    return true;
+  }
+
+  return ROLE_ACCESS[role].prefixPaths.some((basePath) =>
     path === basePath || path.startsWith(`${basePath}/`)
   );
 };
