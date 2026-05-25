@@ -21,8 +21,8 @@ interface User {
 }
 const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 const ROLES_ENDPOINT = `${API_URL}/rol`
-const USERS_ENDPOINT = `${API_URL}/auth/register`
-
+const USERS_ENDPOINT = `${API_URL}/user`
+const REGISTER_ENDPOINT = `${API_URL}/auth/register`
 const getAuthToken = () => {
 	const tokenPair = document.cookie
 		.split('; ')
@@ -222,7 +222,7 @@ export default function UsersPage() {
 		}
 
 		try {
-			const response = await fetch(USERS_ENDPOINT, {
+			const response = await fetch(REGISTER_ENDPOINT, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
