@@ -160,8 +160,25 @@ export default function InventoryPage() {
     })
   }
 
-  const handleDeleteMovement = (id: number) => {
-    setMovementData((prev) => prev.filter((item) => item.id !== id))
+  const handleDeleteMovement = async (id: number) => {
+    try {
+      if (!API_URL) {
+        throw new Error('Falta configurar NEXT_PUBLIC_BACKEND_URL.')
+      }
+
+      const response = await fetch(`${API_URL}/movements/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`)
+      }
+
+      setMovementData((prev) => prev.filter((item) => item.id !== id))
+    } catch (error) {
+      console.error(error)
+      window.alert(error instanceof Error ? error.message : 'No se pudo eliminar el movimiento.')
+    }
   }
 
   const exportColumns = [

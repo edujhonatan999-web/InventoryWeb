@@ -32,7 +32,7 @@ interface User {
 	id: number
 	username: string
 }
-const API_URL= process.env.BACKEND_URL
+const API_URL= process.env.NEXT_PUBLIC_BACKEND_URL
 const TICKETS_ENDPOINT = `${API_URL}/tickets`
 const USERS_ENDPOINT = `${API_URL}/user`
 const STATUS_OPTIONS = ['pending', 'in_progress', 'resolved'] as const
